@@ -1,4 +1,6 @@
 import os
+import pandas as pd
+import numpy as np
 from flask import Flask, render_template, request, redirect, url_for, flash, send_from_directory
 from werkzeug.utils import secure_filename
 
@@ -29,11 +31,12 @@ def home():
                                     filename=filename))
     return render_template('home.html')
 
+
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     file = open(UPLOAD_FOLDER + '\\' + filename, "r")
-    return file.read()
-
+    df = pd.read_csv(file)
+    return df.describe()
 
 
 def allowed_file(filename):
@@ -42,4 +45,4 @@ def allowed_file(filename):
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
