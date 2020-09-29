@@ -2,23 +2,28 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>DataDash</title>
+    <title>Data</title>
   </head>
-  <body>
-    <h1>Your Data:</h1>
+  <img
+    src="{{url_for('static', filename='logo.png')}}"
+    width="250"
+    height="=250"
+  />
+
+  <body style="background-color: lightgray">
+    <h1 style="color: green">Your Data:</h1>
+
+    {{ data | safe }}
+
+    <h1 style="color: green">Summary:</h1>
   </body>
+
+  {{ summary_data | safe }}
+  <p></p>
+  <img
+    src="{{url_for('static', filename='boxplot1.png')}}"
+    width="500"
+    height="400"
+  />
+  <p></p>
 </html>
-
-{{ data | safe }}
-
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>DataDash</title>
-  </head>
-  <body>
-    <h1>Summary:</h1>
-  </body>
-</html>
-
-{{ summary_data | safe }}
