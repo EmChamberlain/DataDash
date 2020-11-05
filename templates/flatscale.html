@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <body style="background-color: lightgray">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Data</title>
+  </head>
+
+  <h1 style="color: green">Flat Scale Curve</h1>
+  <p><b>Summary:</b> In a flatscale, typically the teacher will pick a value and
+    increase all the scores by this value. It is a simple, yet effective way to
+    curve scores. Typically most teachers will choose the value to be equal to
+    100 - Max(score), so that no scores are above 100.
+</p>
+<h2>New Grades: </h2>
+  {{ data | safe }}
+<h2>New Summary: </h2>
+  {{ summary_data | safe }}
+<p></p>
+
+  <img
+    src="{{url_for('static', filename='boxplotfs.png')}}"
+    width="500"
+    height="400"
+  />
+  <img
+  src="{{url_for('static', filename='histogramfs.png')}}"
+  width="500"
+  height="400"
+/>
+<img
+src="{{url_for('static', filename='frequencyfs.png')}}"
+width="500"
+height="400"
+/>
+  <p></p>
+</body>
+</html>

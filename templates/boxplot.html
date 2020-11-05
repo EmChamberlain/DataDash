@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <body style="background-color: lightgray">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Data</title>
+  </head>
+
+  <h1 style="color: green">Boxplot</h1>
+  <p>The boxplot for your scores:</p>
+  <img
+    src="{{url_for('static', filename='boxplot.png')}}"
+    width="500"
+    height="400"
+  />
+<p>
+  <b>Min:</b> {{min |safe}}
+</p>
+<p>
+  <b>Lower Quantile:</b> {{ q1 | safe}}
+
+</p>
+<p>
+  <b>Median:</b> {{q2 | safe}}
+
+</p>
+<p>
+  <b>Upper Quantile:</b>  {{q3 | safe}}
+</p>
+<b>Max:</b> {{max | safe}}
+</p>
+  <h2>Understanding a Boxplot:</h2>
+  <p><b>Summary:</b> A box plot is a chart used in data analysis to visually show
+      the distribution of numerical data and skewness through displaying
+      the data quartiles (percentiles) and averages. They show the five-number 
+      summary of a data set partioned into four even segments:
+  </p>
+
+<p></p>
+<img
+src="{{url_for('static', filename='percents.png')}}"
+width="500"
+height="200"
+/>
+  <p><b>Skew:</b> Depending on where the median line is located on the boxplot,
+      it will show how evenly the data is distributed. A positive skew would mean that
+      generally students did better on the test than the median value. A negative skew
+      would mean that students did worse on the test than the median value.
+      A median line in the center means the median is an accurate representation of the
+      middle test score value. 
+  </p>
+  <img
+  src="{{url_for('static', filename='skew.png')}}"
+  width="500"
+  height="400"
+/>
+  <p><b>Outliers:</b> Outliers can skew the data distribution and the mean. It can be calculated
+as shown below, and you can view them as a point below or above the minimum and maximum values for the boxplot.
+Were there any outliers on your boxplot? Those are the students who either did exceptionally well or poor on your 
+quiz/test.</p>
+<img
+src="{{url_for('static', filename='outliers.png')}}"
+width="500"
+height="200"
+/>
+</body>
+</html>

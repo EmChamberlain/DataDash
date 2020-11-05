@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+    <body style="background-color: lightgray">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Data</title>
+  </head>
+
+  <h1 style="color: green">Root Scale Curve</h1>
+  <p><b>Summary:</b> In this method, you take the square root of the score, and
+    multiply it by 10. The lower scores will get a larger boost 
+    than the higher scores.
+</p>
+<h2>New Grades: </h2>
+  {{ data | safe }}
+<h2>New Summary: </h2>
+  {{ summary_data | safe }}
+<p></p>
+
+  <img
+    src="{{url_for('static', filename='boxplotrs.png')}}"
+    width="500"
+    height="400"
+  />
+  <img
+  src="{{url_for('static', filename='histogramrs.png')}}"
+  width="500"
+  height="400"
+/>
+<img
+src="{{url_for('static', filename='frequencyrs.png')}}"
+width="500"
+height="400"
+/>
+  <p></p>
+</body>
+</html>

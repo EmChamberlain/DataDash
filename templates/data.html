@@ -9,7 +9,20 @@
     width="250"
     height="=250"
   />
-
+  
+  <script>
+    // Check if the localStorage object exists
+    
+    if(localStorage) {
+        // Store data
+        localStorage.setItem("first_name", count);
+        
+        // Retrieve data
+        alert("Hi, " + localStorage.getItem("first_name"));
+    } else {
+        alert("Sorry, your browser do not support local storage.");
+    }
+    </script>
   <body style="background-color: lightgray">
     <h1 style="color: green">Your Data:</h1>
 
@@ -18,12 +31,63 @@
     <h1 style="color: green">Summary:</h1>
   </body>
 
+
   {{ summary_data | safe }}
+  <h3>Understanding the Stats:</h3>
+  <p><b>Count:</b> You submitted {{count | safe}} student test scores.</p>
+  <p>
+    <b>Mean:</b> The average test score was {{mean | safe}}. It is
+    calculated by adding all the scores together and dividing by the count. The
+    mean is a good overall representation of the middle value scored by your
+    class.
+  </p>
+  <p>
+    <b>Standard Deviation:</b> Your standard deviation was {{std |
+    safe}}. Standard deviation tells you how spread out the data is, it is a
+    measure of how far each observed value is from the average. The larger the
+    standard deviation, the more spread out your data is. For your quiz, 95% of
+    your students scored between {{ lower }} and {{ mean + std}}.
+  </p>
+  <p>
+    <b>Min:</b> The minimun score was {{min |
+    safe}}.
+  </p>
+  <p>
+    <b>25th Percentile:</b> The 25th percentile for the quiz was {{ q1 | safe}}.
+    In other words, this is the first quartile. This means that a quarter of the
+    test scores were below this score. On the other hand, three-quarters of the
+    test scores were above this value.
+  </p>
+  <p>
+    <b>50th Percentile:</b> The 50th percentile for the quiz was {{q2 | safe}}.
+    This is the second quantile. Half of the test scores were
+    below this score and half were above. Similar to the mean, this value is
+    also good for getting a good sense of the middle value of the test score.
+  </p>
+  <p>
+    <b>75th Percentile:</b> The 75th percentile for the quiz was {{q3 | safe}}.
+    This is considered the third quantile. This means that three-quarters of the
+    test scores were above this score. On the other hand, one quarter of the
+    test scores were below this value.
+  </p>
+  <p>
+    <b>Max:</b> The maximum score was {{max |
+    safe}}.
+  </p>
   <p></p>
-  <img
-    src="{{url_for('static', filename='boxplot1.png')}}"
-    width="500"
-    height="400"
-  />
+  <h1 style="color: green">Visualization Options:</h1>
+  <p>Click on the different viualization options to summarize your test results:</p>
+
+  <p><a href="{{ url_for('boxplot') }}">Boxplot</a></p>
+  <p><a href="{{ url_for('histogram') }}">Histogram</a></p>
+  <p><a href="{{ url_for('frequency') }}">Bar Graph</a></p>
+
+  <h1 style="color: green">Curving Options:</h1>
+  <p>Click on the different curving option to curve your scores:</p>
+  <p><a href="{{ url_for('flatscale') }}">Flat Scale</a></p>
+  <p><a href="{{ url_for('linearscale') }}">Linear Scale</a></p>
+  <p><a href="{{ url_for('rootscale') }}">Root Scale</a></p>
+  <p></p>
+  <p></p>
   <p></p>
 </html>

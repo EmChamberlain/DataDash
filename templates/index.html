@@ -10,11 +10,18 @@
       width="250"
       height="=250"
     />
-    <h2 style="color: darkgreen">A quick and easy way to explore your data!</h2>
+    <h2 style="color: darkgreen">A quick and easy way to explore test scores!</h2>
     <p>
-      Just upload a csv formatted file and get instant statistics on your
-      numerical data
+      Just upload a csv formatted file and get instant statistics
     </p>
+    <p>
+      Please format your data as a csv or xlsx spreadsheet as specificed by this picture:
+    </p>
+    <img
+    src="{{url_for('static', filename='example.png')}}"
+    width="250"
+    height="=250"
+  />
     <form class="" action="data" method="post">
       <input type="file" name="upload-file" value="" />
       <input type="submit" value="Submit" />

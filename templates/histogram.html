@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <body style="background-color: lightgray">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Data</title>
+  </head>
+
+  <h1 style="color: green">Histogram</h1>
+  <p>The histogram for your scores:</p>
+  <img
+    src="{{url_for('static', filename='histogram.png')}}"
+    width="500"
+    height="400"
+  />
+  <h2>Understanding a Histogram:</h2>
+  <p><b>Summary:</b> A histogram provides a visual interpretation of the number of
+    data points that lie within a range of values. These ranges of values are called classes
+    or bins. The frequency of the data that falls in each class is depicted by the use of a
+    bar. Histograms are useful for viewing how the data is distributed.
+</p>
+<p><b>Shapes:</b> A histogram can take on several different types of distributions,
+  as depicted below:
+</p>
+<img
+src="{{url_for('static', filename='shapes.png')}}"
+width="600"
+height="400"
+/>
+<p><b>Symmetrical:</b> This is otherwise known as a normal distribution.
+  Scores are equally likely to occur on either side of the average. This means
+  that the average is an overall accurate depiction of the center value.
+</p>
+<p><b>Left Skew:</b> A left skew would mean the distribution is skewed left, towards
+  the higher values. This means that there were few people that did extrordinarily well
+  on the test, and a majority only did okay or poorly.
+</p>
+<p><b>Right Skew:</b> A right skew would mean the distribution is skewed right, towards
+  the lower values. This means that there were many people that did okay and very well, and
+  there were a few people who did exceptionally poor.
+</p>
+<p><b>Uniform:</b> A uniform histogram is hard to gain information from. It mostly means
+  that the class did evenly well across the the different score ranges chosen for the histogram. 
+</p>
+<p><b>Bimodal/Multimodal:</b> A multimodal shape has two or more peaks. This means that the 
+  test scores peaked in two different areas, some centered around a higher score, other centered
+  around a lower score.
+</p>
+  <p></p>
+</body>
+</html>

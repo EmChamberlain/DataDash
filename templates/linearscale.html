@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <body style="background-color: lightgray">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Data</title>
+  </head>
+
+  <h1 style="color: green">Linear Scale Curve</h1>
+  <p><b>Summary:</b> In a linear scale, the teacher is able to control where the average lies.
+    It helps the weakest grades get an extra boost, while not over curving the higher grades.
+</p>
+<h2>New Grades: </h2>
+  {{ data | safe }}
+<h2>New Summary: </h2>
+  {{ summary_data | safe }}
+<p></p>
+
+  <img
+    src="{{url_for('static', filename='boxplotls.png')}}"
+    width="500"
+    height="400"
+  />
+  <img
+  src="{{url_for('static', filename='histogramls.png')}}"
+  width="500"
+  height="400"
+/>
+<img
+src="{{url_for('static', filename='frequencyls.png')}}"
+width="500"
+height="400"
+/>
+  <p></p>
+</body>
+</html>
