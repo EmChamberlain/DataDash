@@ -1,0 +1,8 @@
+os
+pandas
+numpy
+flask
+werkzeug
+os
+matplotlib
+math
