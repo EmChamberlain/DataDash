@@ -7,13 +7,12 @@ from os.path import join, dirname, realpath
 import matplotlib.pyplot as plt
 import math
 import pathlib
+import tempfile
 
-UPLOAD_FOLDER = '/tmp'
-
-
+UPLOAD_PATH = '/tmp/FileStorage'
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_FOLDER'] = UPLOAD_PATH
 
 # randomly generated with print(os.urandom(24))
 app.secret_key = b'&\xa1\x89\xb8\xdd\x07\xad\xfd\xa3/\xe8\x03\x18\x06XK\xef\x87\xfekn\xd6n\xa5'
@@ -32,6 +31,15 @@ df = pd.DataFrame()
 def index():
     return render_template('index.html')
 
+def saveNewFile(fileStorageIn):
+    extension = os.path.splitext(fileStorageIn.name)[1]
+    newName = tempfile.NamedTemporaryFile().name
+    while os.path.isdir(os.path.join(UPLOAD_PATH, newName)):
+        newName = tempfile.NamedTemporaryFile().name
+
+    os.mkdir(os.path.join(UPLOAD_PATH, newName))
+    fileStorageIn.save(os.path.join(UPLOAD_PATH, newName, 'data.csv'))
+    return newName
 
 @app.route('/data', methods=['GET', 'POST'])
 def data():
@@ -39,42 +47,26 @@ def data():
         if len(request.files) == 0:
             flash("No file part")
             return redirect(request.url)
-        global df
-        f = request.form['upload-file']
-        path = pathlib.Path(__file__).parent.absolute()
-        print("PATH " + str(path))
-        file = os.path.join(path, f)
-        df = pd.read_csv(file)
+
+        fileStorObj = request.files['upload-file']
+        cookieFolderName = saveNewFile(fileStorObj)
+        df = pd.read_csv(os.path.join(UPLOAD_PATH, cookieFolderName, 'data.csv'))
         plt.figure()
         print(df)
         summary_stats = df.describe()
         ss_dict = summary_stats.to_dict()
 
         box = df.boxplot(column=["Score"])
-        plt.savefig(os.path.join(path, "static/boxplot.png"))
+        plt.savefig(os.path.join(UPLOAD_PATH, cookieFolderName, "boxplot.png"))
 
         plt.figure()
         df['Score'].value_counts().plot('bar')
-        plt.savefig(os.path.join(path, "static/frequency1.png"))
+        plt.savefig(os.path.join(UPLOAD_PATH, cookieFolderName, "frequency1.png"))
 
         plt.figure()
         df.hist(bins=10)
-        plt.savefig(os.path.join(path, "static/histogram.png"))
+        plt.savefig(os.path.join(UPLOAD_PATH, cookieFolderName, "histogram.png"))
 
-        global Min
-        global Q1
-        global Median
-        global Q2
-        global Max
-        global Mean
-
-        Min = ss_dict['Score']['min']
-        Q1 = ss_dict['Score']['25%']
-        Median = ss_dict['Score']['50%']
-        Q2 = ss_dict['Score']['75%']
-        Max = ss_dict['Score']['max']
-        Mean = ss_dict['Score']['mean']
-        # inject_dict_for_all_templates(ss_dict)
         return render_template('data.html', data=df.to_html(), summary_data=summary_stats.to_html(),
                            mean=round(ss_dict['Score']['mean'], 2), count=round(ss_dict['Score']['count']), std=round(ss_dict['Score']['std'], 2),
                            lower=round(
