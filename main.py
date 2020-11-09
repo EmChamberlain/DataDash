@@ -65,7 +65,7 @@ def data():
     plt.savefig(os.path.join(uploadPath, cookieName, "boxplot.png"))
 
     plt.figure()
-    df['Score'].value_counts().plot('bar')
+    df['Score'].value_counts().plot(kind = 'bar')
     plt.savefig(os.path.join(uploadPath, cookieName, "frequency.png"))
 
     plt.figure()
@@ -162,7 +162,7 @@ def flatscale():
     plt.savefig(os.path.join(uploadPath, cookieName, "boxplotfs.png"))
 
     plt.figure()
-    df['Score'].value_counts().plot('bar')
+    df['Score'].value_counts().plot(kind='bar')
     plt.savefig(os.path.join(uploadPath, cookieName, "frequencyfs.png"))
 
     plt.figure()
@@ -203,7 +203,7 @@ def linearscale():
     plt.savefig(os.path.join(uploadPath, cookieName, "boxplotls.png"))
 
     plt.figure()
-    df['Score'].value_counts().plot('bar')
+    df['Score'].value_counts().plot(kind='bar')
     plt.savefig(os.path.join(uploadPath, cookieName, "frequencyls.png"))
 
     plt.figure()
@@ -238,7 +238,7 @@ def rootscale():
     plt.savefig(os.path.join(uploadPath, cookieName, "boxplotrs.png"))
 
     plt.figure()
-    df['Score'].value_counts().plot('bar')
+    df['Score'].value_counts().plot(kind='bar')
     plt.savefig(os.path.join(uploadPath, cookieName, "frequencyrs.png"))
 
     plt.figure()
