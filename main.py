@@ -8,7 +8,18 @@ import matplotlib.pyplot as plt
 import math
 import pathlib
 
+UPLOAD_FOLDER = '/tmp'
+
+
+
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# randomly generated with print(os.urandom(24))
+app.secret_key = b'&\xa1\x89\xb8\xdd\x07\xad\xfd\xa3/\xe8\x03\x18\x06XK\xef\x87\xfekn\xd6n\xa5'
+
+
+
 
 Min = 0
 Q1 = 0
@@ -16,7 +27,7 @@ Median = 0
 Q2 = 0
 Max = 0
 Mean = 0
-df = {}
+df = pd.DataFrame()
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
@@ -25,6 +36,9 @@ def index():
 @app.route('/data', methods=['GET', 'POST'])
 def data():
     if request.method == 'POST':
+        if len(request.files) == 0:
+            flash("No file part")
+            return redirect(request.url)
         global df
         f = request.form['upload-file']
         path = pathlib.Path(__file__).parent.absolute()
@@ -61,12 +75,15 @@ def data():
         Max = ss_dict['Score']['max']
         Mean = ss_dict['Score']['mean']
         # inject_dict_for_all_templates(ss_dict)
-    return render_template('data.html', data=df.to_html(), summary_data=summary_stats.to_html(),
+        return render_template('data.html', data=df.to_html(), summary_data=summary_stats.to_html(),
                            mean=round(ss_dict['Score']['mean'], 2), count=round(ss_dict['Score']['count']), std=round(ss_dict['Score']['std'], 2),
                            lower=round(
                                ss_dict['Score']['mean'] - ss_dict['Score']['std'], 2),
                            min=ss_dict['Score']['min'], q1=ss_dict['Score']['25%'], q2=ss_dict['Score']['50%'],
                            q3=ss_dict['Score']['75%'], max=ss_dict['Score']['max'])
+    else:
+        flash("No file part")
+        return redirect(url_for('index'))
 
 
 @app.route('/boxplot', methods=['GET', 'POST'])
