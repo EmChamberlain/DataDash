@@ -1,72 +1,86 @@
 import os
 import pandas as pd
 import numpy as np
-from flask import Flask, render_template, request, redirect, url_for, flash, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, flash, send_from_directory, make_response
 from werkzeug.utils import secure_filename
 from os.path import join, dirname, realpath
 import matplotlib.pyplot as plt
 import math
 import pathlib
 
-app = Flask(__name__)
+uploadPath = os.path.join(os.getcwd(), '\\FileStorage')
+cookieMaxAge = 60*60*24*7
+cookieID = 'CurrentID'
 
-Min = 0
-Q1 = 0
-Median = 0
-Q2 = 0
-Max = 0
-Mean = 0
-df = {}
+app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = uploadPath
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+
+# randomly generated with print(os.urandom(24))
+app.secret_key = b'&\xa1\x89\xb8\xdd\x07\xad\xfd\xa3/\xe8\x03\x18\x06XK\xef\x87\xfekn\xd6n\xa5'
+
+@app.route('/images', methods=['GET', 'POST'])
+def images():
+    return send_from_directory(os.path.join(uploadPath,
+        secure_filename(request.cookies.get(cookieID))),
+        secure_filename(request.args.get('filename')))
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
 
+def randomName():
+    return str(os.urandom(10).hex())
+
+def saveNewFile(fileStorageIn):
+    extension = os.path.splitext(fileStorageIn.name)[1]
+    newName = randomName()
+    while os.path.isdir(os.path.join(uploadPath, newName)):
+        newName = randomName()
+
+    os.makedirs(os.path.join(uploadPath, newName))
+
+    fileStorageIn.save(os.path.join(uploadPath, newName, 'data.csv'))
+    return newName
 
 @app.route('/data', methods=['GET', 'POST'])
 def data():
+    df = pd.DataFrame()
     if request.method == 'POST':
-        global df
-        f = request.form['upload-file']
-        path = pathlib.Path(__file__).parent.absolute()
-        print("PATH " + str(path))
-        file = os.path.join(path, f)
-        df = pd.read_csv(file)
-        plt.figure()
-        print(df)
-        summary_stats = df.describe()
-        ss_dict = summary_stats.to_dict()
+        if len(request.files) == 0:
+            flash("No file part")
+            return redirect(request.url)
 
-        box = df.boxplot(column=["Score"])
-        plt.savefig(os.path.join(path, "static/boxplot.png"))
+        fileStorObj = request.files['upload-file']
+        cookieName = saveNewFile(fileStorObj)
+        df = pd.read_csv(os.path.join(uploadPath, cookieName, 'data.csv'))
+    else:
+        df = pd.read_csv(os.path.join(uploadPath, request.cookies.get(cookieID), 'data.csv'))
 
-        plt.figure()
-        df['Score'].value_counts().plot('bar')
-        plt.savefig(os.path.join(path, "static/frequency1.png"))
+    plt.figure()
+    summary_stats = df.describe()
+    ss_dict = summary_stats.to_dict()
 
-        plt.figure()
-        df.hist(bins=10)
-        plt.savefig(os.path.join(path, "static/histogram.png"))
+    box = df.boxplot(column=["Score"])
+    plt.savefig(os.path.join(uploadPath, cookieName, "boxplot.png"))
 
-        global Min
-        global Q1
-        global Median
-        global Q2
-        global Max
-        global Mean
+    plt.figure()
+    df['Score'].value_counts().plot(kind = 'bar')
+    plt.savefig(os.path.join(uploadPath, cookieName, "frequency.png"))
 
-        Min = ss_dict['Score']['min']
-        Q1 = ss_dict['Score']['25%']
-        Median = ss_dict['Score']['50%']
-        Q2 = ss_dict['Score']['75%']
-        Max = ss_dict['Score']['max']
-        Mean = ss_dict['Score']['mean']
-        # inject_dict_for_all_templates(ss_dict)
-    return render_template('data.html', data=df.to_html(), summary_data=summary_stats.to_html(),
-                           mean=round(ss_dict['Score']['mean'], 2), count=round(ss_dict['Score']['count']), std=round(ss_dict['Score']['std'], 2),
-                           lower=round(
-                               ss_dict['Score']['mean'] - ss_dict['Score']['std'], 2),
-                           min=ss_dict['Score']['min'], q1=ss_dict['Score']['25%'], q2=ss_dict['Score']['50%'],
-                           q3=ss_dict['Score']['75%'], max=ss_dict['Score']['max'])
+    plt.figure()
+    df.hist(bins=10)
+    plt.savefig(os.path.join(uploadPath, cookieName, "histogram.png"))
+
+    response = make_response(render_template('data.html', data=df.to_html(), summary_data=summary_stats.to_html(),
+                       mean=round(ss_dict['Score']['mean'], 2), count=round(ss_dict['Score']['count']), std=round(ss_dict['Score']['std'], 2),
+                       lower=round(
+                           ss_dict['Score']['mean'] - ss_dict['Score']['std'], 2),
+                       min=ss_dict['Score']['min'], q1=ss_dict['Score']['25%'], q2=ss_dict['Score']['50%'],
+                       q3=ss_dict['Score']['75%'], max=ss_dict['Score']['max']))
+    response.set_cookie(cookieID, cookieName, max_age=cookieMaxAge)
+    return response
+
 
 
 @app.route('/boxplot', methods=['GET', 'POST'])
@@ -80,11 +94,17 @@ def boxplot():
     # print("HEREEEEEEE")
     # print(Mean)
     # show the form, it wasn't submitted
-    global Min
-    global Q1
-    global Median
-    global Q2
-    global Max
+
+    df = pd.read_csv(os.path.join(uploadPath, request.cookies.get(cookieID), 'data.csv'))
+    summary_stats = df.describe()
+    ss_dict = summary_stats.to_dict()
+
+
+    Min = ss_dict['Score']['min']
+    Q1 = ss_dict['Score']['25%']
+    Median = ss_dict['Score']['50%']
+    Q2 = ss_dict['Score']['75%']
+    Max = ss_dict['Score']['max']
 
     return render_template('boxplot.html', min=Min, max=Max, q1=Q1, q2=Median, q3=Q2)
 
@@ -124,7 +144,14 @@ def flatscale():
         # the redirect can be to the same route or somewhere else
         return redirect(url_for('index'))
 
+    cookieName = request.cookies.get(cookieID)
+
     # show the form, it wasn't submitted
+    df = pd.read_csv(os.path.join(uploadPath, cookieName, 'data.csv'))
+    summary_stats = df.describe()
+    ss_dict = summary_stats.to_dict()
+
+    Max = ss_dict['Score']['max']
 
     df["Score"] += (100-Max)
     summary_stats = df.describe()
@@ -132,15 +159,15 @@ def flatscale():
 
     plt.figure()
     box = df.boxplot(column=["Score"])
-    plt.savefig("static/boxplotfs.png")
+    plt.savefig(os.path.join(uploadPath, cookieName, "boxplotfs.png"))
 
     plt.figure()
-    df['Score'].value_counts().plot('bar')
-    plt.savefig("static/frequencyfs.png")
+    df['Score'].value_counts().plot(kind='bar')
+    plt.savefig(os.path.join(uploadPath, cookieName, "frequencyfs.png"))
 
     plt.figure()
     df.hist(bins=10)
-    plt.savefig("static/histogramfs.png")
+    plt.savefig(os.path.join(uploadPath, cookieName, "histogramfs.png"))
     return render_template('flatscale.html', data=df.to_html(), summary_data=summary_stats.to_html())
 
 
@@ -153,9 +180,17 @@ def linearscale():
         # the redirect can be to the same route or somewhere else
         return redirect(url_for('index'))
 
-    # show the form, it wasn't submitted
+    cookieName = request.cookies.get(cookieID)
 
+    # show the form, it wasn't submitted
+    df = pd.read_csv(os.path.join(uploadPath, cookieName, 'data.csv'))
+    summary_stats = df.describe()
+    ss_dict = summary_stats.to_dict()
     df_copy = df
+
+    Min = ss_dict['Score']['min']
+    Max = ss_dict['Score']['max']
+    Mean = ss_dict['Score']['mean']
 
     summary_stats = df_copy.describe()
     ss_dict = summary_stats.to_dict()
@@ -165,15 +200,16 @@ def linearscale():
 
     plt.figure()
     box = df.boxplot(column=["Score"])
-    plt.savefig("static/boxplotls.png")
+    plt.savefig(os.path.join(uploadPath, cookieName, "boxplotls.png"))
 
     plt.figure()
-    df['Score'].value_counts().plot('bar')
-    plt.savefig("static/frequencyls.png")
+    df['Score'].value_counts().plot(kind='bar')
+    plt.savefig(os.path.join(uploadPath, cookieName, "frequencyls.png"))
 
     plt.figure()
     df.hist(bins=10)
-    plt.savefig("static/histogramls.png")
+    plt.savefig(os.path.join(uploadPath, cookieName, "histogramls.png"))
+
     return render_template('linearscale.html', data=df_copy.to_html(), summary_data=summary_stats.to_html())
 
 
@@ -186,7 +222,10 @@ def rootscale():
         # the redirect can be to the same route or somewhere else
         return redirect(url_for('index'))
 
+    cookieName = request.cookies.get(cookieID)
+
     # show the form, it wasn't submitted
+    df = pd.read_csv(os.path.join(uploadPath, cookieName, 'data.csv'))
     df_copy = df
 
     summary_stats = df_copy.describe()
@@ -196,21 +235,25 @@ def rootscale():
 
     plt.figure()
     box = df.boxplot(column=["Score"])
-    plt.savefig("static/boxplotrs.png")
+    plt.savefig(os.path.join(uploadPath, cookieName, "boxplotrs.png"))
 
     plt.figure()
-    df['Score'].value_counts().plot('bar')
-    plt.savefig("static/frequencyrs.png")
+    df['Score'].value_counts().plot(kind='bar')
+    plt.savefig(os.path.join(uploadPath, cookieName, "frequencyrs.png"))
 
     plt.figure()
     df.hist(bins=10)
-    plt.savefig("static/histogramrs.png")
+    plt.savefig(os.path.join(uploadPath, cookieName, "histogramrs.png"))
     return render_template('rootscale.html', data=df_copy.to_html(), summary_data=summary_stats.to_html())
 
+@app.after_request
+def add_header(r):
+    r.cache_control.no_cache = True
+    r.cache_control.no_store = True
+    r.cache_control.must_revalidate = True
+    r.expires = 0
+    return r
 
 if __name__ == '__main__':
     app.run(debug=True)
 
-
-if __name__ == '__main__':
-    app.run(debug=True)
