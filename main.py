@@ -29,6 +29,9 @@ def images():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    # If it is POST request the redirect 
+    if request.method =='POST': 
+        return redirect(url_for('index'))
     return render_template('index.html')
 
 
@@ -52,9 +55,9 @@ def saveNewFile(fileStorageIn):
 def data():
     df = pd.DataFrame()
     if request.method == 'POST':
-        if len(request.files) == 0:
-            flash("No file part")
-            return redirect(request.url)
+        print(request.files['upload-file'].filename)
+        if request.files['upload-file'].filename == '':
+            return render_template('error.html')
 
         fileStorObj = request.files['upload-file']
         cookieName = saveNewFile(fileStorObj)
@@ -62,7 +65,8 @@ def data():
     else:
         df = pd.read_csv(os.path.join(
             uploadPath, request.cookies.get(cookieID), 'data.csv'))
-
+    if "Score" not in df:
+        return render_template('error.html')
     plt.figure()
     summary_stats = df.describe()
     ss_dict = summary_stats.to_dict()

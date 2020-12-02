@@ -4,9 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+    section:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+    article {
+      float: left;
+      padding: 20px;
+      width: 70%;
 
-    <title>Data</title>
+    }
+    footer {
+      background-color: rgb(168, 168, 168);
+      padding: 10px;
+      text-align: center;
+      color: white;
+    }
+  </style>
   </head>
+
   <div class="topnav" style="  background-color: #333;
   overflow: hidden;">
     <a class="home" href="/" style="float: left;
@@ -16,12 +34,7 @@
     text-decoration: none;
     font-size: 17px;">Home</a>
   </div>
-  <img
-    src="{{url_for('static', filename='logo.png')}}"
-    width="250"
-    height="=250"
-  />
-  
+
   <script>
     // Check if the localStorage object exists
     
@@ -35,17 +48,52 @@
         alert("Sorry, your browser do not support local storage.");
     }
     </script>
-  <body style="background-color: lightgray">
+  <body> 
+  <header>
+    <a id="top"></a>
+    <style scoped>
+      .pattern {min-height:50px;}
+      
+      #stripes13 {
+      background-image: repeating-linear-gradient(165deg, #ccc, #ccc 60px, #dbdbdb 60px, #dbdbdb 120px);
+      }
+      </style>
+      
+      <div id="stripes13" class="pattern">
+        <img
+        src="{{url_for('static', filename='logo.png')}}"
+        width="200"
+        height="=200"
+      />
+      </div>
+  </header>  
+  
+  <section>
+    
+    <nav>
+      <ul>
+        <li><a href="#data">Data</a></li>
+        <li><a href="#summary">Summary</a></li>
+        <li><a href="#visuals">Visualization</a></li>
+        <li><a href="#curve">Curving</a></li>
+      </ul>
+    </nav>
+  <article>
+    <a id="data">
     <h1 style="color: green">Your Data:</h1>
-
+  </a>
     {{ data | safe }}
-
+    <nav>
+        <a href="#top">Back To Top</a>
+    </nav>
+    <a id="summary">
     <h1 style="color: green">Summary:</h1>
-  </body>
+  </a> 
 
-
+  
   {{ summary_data | safe }}
   <h3>Understanding the Stats:</h3>
+ 
   <p><b>Count:</b> You submitted {{count | safe}} student test scores.</p>
   <p>
     <b>Mean:</b> The average test score was {{mean | safe}}. It is
@@ -87,14 +135,20 @@
     safe}}.
   </p>
   <p></p>
+  <a id="visuals">
+    <nav>
+      <a href="#top">Back To Top</a>
+  </nav>
   <h1 style="color: green">Visualization Options:</h1>
+</a>
   <p>Click on the different viualization options to summarize your test results:</p>
 
   <p><a href="{{ url_for('boxplot') }}">Boxplot</a></p>
   <p><a href="{{ url_for('histogram') }}">Histogram</a></p>
   <p><a href="{{ url_for('frequency') }}">Bar Graph</a></p>
-
+  <a id="curve">
   <h1 style="color: green">Curving Options:</h1>
+  </a>
   <p>Click on the different curving option to curve your scores:</p>
   <p><a href="{{ url_for('flatscale') }}">Flat Scale</a></p>
   <p><a href="{{ url_for('linearscale') }}">Linear Scale</a></p>
@@ -105,5 +159,9 @@
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
+</div>
+</article>
+</section>
+<footer><a href="#top">Back To Top</a></footer:>
+</body> 
 </html>
