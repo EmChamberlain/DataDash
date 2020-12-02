@@ -26,6 +26,14 @@ def images():
                                             secure_filename(request.cookies.get(cookieID))),
                                secure_filename(request.args.get('filename')))
 
+@app.errorhandler(404)
+def not_found(e):
+    return render_template('404.html')
+
+
+@app.errorhandler(500)
+def server_error(e):
+    return render_template("public/500.html")
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -53,10 +61,8 @@ def saveNewFile(fileStorageIn):
 
 @app.route('/data', methods=['GET', 'POST'])
 def data():
-    print("enter")
     df = pd.DataFrame()
     if request.method == 'POST':
-        print(request.files['upload-file'].filename)
         if request.files['upload-file'].filename == '':
             return render_template('error.html')
 
@@ -64,18 +70,16 @@ def data():
         cookieName = saveNewFile(fileStorObj)
         df = pd.read_csv(os.path.join(uploadPath, cookieName, 'data.csv'))
     else:
-        print("enter2")
         cookieName = request.cookies.get(cookieID)
         df = pd.read_csv(os.path.join(
             uploadPath, request.cookies.get(cookieID), 'data.csv'))
-        print("enter3")
-    print("enter4")
+
     if "Score" not in df:
         return render_template('error.html')
     plt.figure()
     summary_stats = df.describe()
     ss_dict = summary_stats.to_dict()
-    print(cookieName)
+
     box = df.boxplot(column=["Score"])
     plt.savefig(os.path.join(uploadPath, cookieName, "boxplot.png"))
 
