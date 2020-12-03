@@ -26,6 +26,7 @@ def images():
                                             secure_filename(request.cookies.get(cookieID))),
                                secure_filename(request.args.get('filename')))
 
+
 @app.errorhandler(404)
 def not_found(e):
     return render_template('404.html')
@@ -35,10 +36,11 @@ def not_found(e):
 def server_error(e):
     return render_template("public/500.html")
 
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    # If it is POST request the redirect 
-    if request.method =='POST': 
+    # If it is POST request the redirect
+    if request.method == 'POST':
         return redirect(url_for('index'))
     return render_template('index.html')
 
@@ -68,7 +70,10 @@ def data():
 
         fileStorObj = request.files['upload-file']
         cookieName = saveNewFile(fileStorObj)
-        df = pd.read_csv(os.path.join(uploadPath, cookieName, 'data.csv'))
+        try:
+            df = pd.read_csv(os.path.join(uploadPath, cookieName, 'data.csv'))
+        except:
+            return render_template("500.html")
     else:
         cookieName = request.cookies.get(cookieID)
         df = pd.read_csv(os.path.join(
