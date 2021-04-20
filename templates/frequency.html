@@ -33,13 +33,16 @@
     font-size: 17px;">Data</a>
   </div>
 <article>
-  <h1 style="color: green">Bar Graph</h1>
+  <h1 style="color: rgb(0, 92, 128)">Bar Graph</h1>
   <p>The bar graph for your scores:</p>
   <img
     src="{{url_for('images', filename='frequency.png')}}"
     width="500"
     height="400"
   />
+  <P></P>
+  <a href="{{url_for('images', filename='frequency.png')}}" download><button type="button" class="btn btn-primary">Download</button></a>
+  <P></P>
   <p><b>Summary:</b> A bar graph shows how many students scored the same grade for each grade.
     The most frequently scored grades are towards the beginning, where the less frequently scored
     grades are towards the end. 

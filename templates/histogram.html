@@ -33,13 +33,16 @@
     font-size: 17px;">Data</a>
   </div>
 <article>
-  <h1 style="color: green">Histogram</h1>
+  <h1 style="color: rgb(0, 92, 128)">Histogram</h1>
   <p>The histogram for your scores:</p>
   <img
     src="{{url_for('images', filename='histogram.png')}}"
     width="500"
     height="400"
   />
+  <P></P>
+  <a href="{{url_for('images', filename='histogram.png')}}" download><button type="button" class="btn btn-primary">Download</button></a>
+  <P></P>
   <h2>Understanding a Histogram:</h2>
   <p><b>Summary:</b> A histogram provides a visual interpretation of the number of
     data points that lie within a range of values. These ranges of values are called classes

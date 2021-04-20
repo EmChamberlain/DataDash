@@ -13,28 +13,54 @@
       #stripes13 {
       background-image: repeating-linear-gradient(165deg, #ccc, #ccc 60px, #dbdbdb 60px, #dbdbdb 120px);
       }
-      </style>
       
-      <div id="stripes13" class="pattern">
-        <img
-        src="{{url_for('static', filename='logo.png')}}"
-        width="200"
-        height="=200"
-      />
+      </style>
+      <style scoped>
+        .pattern {
+          position: relative;
+          text-align: center;
+          color: white;
+          min-height:50px;
+          width: 100%;
+        }
+        .centered {
+          position: absolute;
+          top: 35%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-size: 100px;
+        }
+        #stripes13 {
+        background-image: repeating-linear-gradient(165deg, #ccc, #ccc 60px, #dbdbdb 60px, #dbdbdb 120px);
+        }
+        </style>
+      
+        <div  class="pattern">
+          <img
+          src="{{url_for('static', filename='header.jpg')}}"
+          width="100%"
+          />
+        <div class="centered">Data Dash</div>
+        </div>
       </div>
-    <div  style="position: absolute; left: 60px; top: 225px;">
-    <h2 style="color: darkgreen">A quick and easy way to explore test scores!</h2>
-    <p>
-      DataDash will give you information on:
-      <li>Test Score Analysis</li>
-      <li>Visualizing data from test scores</li>
-      <li>Different options to curve scores</li>
-    </p>
-    <p> To upload a file:</p>
-    <p>1. Create a csv file, in excel, google spreadsheets, etc.</p>
-    <p>2. Create two columns, one labled "Name", and the other "Score". Make sure these are spelled correctly.</p>
-    <p>3. Add the names and scores to your csv file.</p>
-    <p>4. Upload and get instant statistic summaries!</p>
+    <div  style="position: absolute; left: 60px; top: 450px;">
+    <h1 style="color: rgb(0, 92, 128)">A quick and easy way to explore test scores!</h1>
+    <div>
+      <p>
+        DataDash will give you information on:
+        <li>Test Score Analysis</li>
+        <li>Visualizing data from test scores</li>
+        <li>Different options to curve scores</li>
+      </p>
+    </div>
+    
+    <h1 style="color: rgb(0, 92, 128)"> To upload a file:</h1>
+    <div style="position: relative; left: 20px;">
+    <p><b style="color: rgb(0, 92, 128)">1.</b> Create a csv file, in excel, google spreadsheets, etc.</p>
+    <p><b style="color: rgb(0, 92, 128)">2.</b> Create two columns, one labled "Name", and the other "Score". Make sure these are spelled correctly.</p>
+    <p><b style="color: rgb(0, 92, 128)">3.</b> Add the names and scores to your csv file.</p>
+    <p><b style="color: rgb(0, 92, 128)">4.</b> Upload and get instant statistic summaries!</p>
+    </div>
     <p>
       Please format your data as a csv or xlsx spreadsheet as specificed by this picture:
     </p>
@@ -43,14 +69,18 @@
     width="250"
     height="=250"
   />
+  <br>
+  <P></P>
     <form class="" action="data" method="post" enctype=multipart/form-data>
       <input type="file" name="upload-file" value="" />
       <input type="submit" value="Submit" />
     </form>
+  <br>
   </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    
   </body>
 </html>
 <script>

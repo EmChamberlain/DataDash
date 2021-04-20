@@ -32,14 +32,17 @@
     font-size: 17px;">Data</a>
   </div>
 <article>
-  <h1 style="color: green">Flat Scale Curve</h1>
+  <h1 style="color: rgb(0, 92, 128)">Flat Scale Curve</h1>
   <p><b>Summary:</b> In a flatscale, typically the teacher will pick a value and
     increase all the scores by this value. It is a simple, yet effective way to
     curve scores. Typically most teachers will choose the value to be equal to
     100 - Max(score), so that no scores are above 100.
 </p>
 <h2>New Grades: </h2>
-  {{ data | safe }}
+<P></P>
+<a href="/flatscaledownload"><button type="button" class="btn btn-primary">Download</button></a>
+<P></P>  
+{{ data | safe }}
 <h2>New Summary: </h2>
   {{ summary_data | safe }}
 <p></p>

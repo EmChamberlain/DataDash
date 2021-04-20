@@ -34,13 +34,17 @@
     font-size: 17px;">Data</a>
   </div>
 <article>
-  <h1 style="color: green">Boxplot</h1>
+  <h1 style="color: rgb(0, 92, 128)">Boxplot</h1>
   <p>The boxplot for your scores:</p>
+  
   <img
     src="{{url_for('images', filename='boxplot.png')}}"
     width="500"
     height="400"
   />
+  <P></P>
+  <a href="{{url_for('images', filename='boxplot.png')}}" download><button type="button" class="btn btn-primary">Download</button></a>
+  <P></P>
 <p>
   <b>Min:</b> {{min |safe}}
 </p>

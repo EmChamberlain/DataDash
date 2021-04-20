@@ -1,10 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js">
+    </script>
+    <script>
+    $(document).ready(function(){
+      $("#example").click(function(){
+        $(this).hide();
+      });
+      $("#option1").click(function(){
+        $("#answer").empty()
+        console.log("test")
+        $("#answer").append("<b>Mean:</b> The average test score was {{mean | safe}}. It is calculated by adding all the scores together and dividing by the count. The mean is a good overall representation of the middle value scored by your class.")
+      });
+      $("#option2").click(function(){
+        $("#answer").empty()
+        console.log("test")
+        $("#answer").append("<b>Standard Deviation:</b> Your standard deviation was {{std | safe}}. Standard deviation tells you how spread out the data is, it is a measure of how far each observed value is from the average. The larger the standard deviation, the more spread out your data is. For your quiz, 95% of your students scored between {{ lower }} and {{ mean + std}}.")
+      });
+      $("#option3").click(function(){
+        $("#answer").empty()
+        console.log("test")
+        $("#answer").append("<p> <b>25th Percentile:</b> The 25th percentile for the quiz was {{ q1 | safe}} In other words, this is the first quartile. This means that a quarter of the test scores were below this score. On the other hand, three-quarters of the test scores were above this value. </p>")
+        $("#answer").append("<p> <b>50th Percentile:</b> The 50th percentile for the quiz was {{q2 | safe}}. This is the second quantile. Half of the test scores were below this score and half were above. Similar to the mean, this value is also good for getting a good sense of the middle value of the test score. </p>")
+        $("#answer").append("<p> <b>75th Percentile:</b> The 75th percentile for the quiz was {{q3 | safe}}. This is considered the third quantile. This means that three-quarters of the test scores were above this score. On the other hand, one quarter of the test scores were below this value. </p>")
+      });
+      $("#option4").click(function(){
+        $("#answer").empty()
+        console.log("test")
+        $("#answer").append("We offer several different visualization options below, including a boxplot, histogram, and bar graph. Click the options below to explore these different visualization methods. These are important tools for helping students understand how they did compared to other classmates in a visual manor.")
+      });
+      $("#option5").click(function(){
+        $("#answer").empty()
+        console.log("test")
+        $("#answer").append("Students who did exceptionally well scored between the 75th percentile and the max. For this test, these are scores between {{q3 | safe}} and {{max | safe}}.")
+      });
+      $("#option6").click(function(){
+        $("#answer").empty()
+        console.log("test")
+        $("#answer").append("Any student with a score between the minimum and the 25th precentile could use extra help. For this test, these are scores between {{min | safe}} and {{q1 | safe}}.")
+      });
+      $("#option7").click(function(){
+        $("#answer").empty()
+        console.log("test")
+        $("#answer").append("If you feel that the average of {{mean | safe}} is particularly low, than you can curve your test scores in order to boost students' grades. There are several different options to curve scores, we provide a few below.")
+      });
+    });
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <style>
+    body {}
     section:after {
       content: "";
       display: table;
@@ -13,6 +61,7 @@
     article {
       float: left;
       padding: 20px;
+      margin-left: 15px;
       width: 70%;
 
     }
@@ -52,109 +101,117 @@
   <header>
     <a id="top"></a>
     <style scoped>
-      .pattern {min-height:50px;}
-      
+      .pattern {
+        position: relative;
+        text-align: center;
+        color: white;
+        min-height:50px;
+        width: 100%;
+      }
+      .centered {
+        position: absolute;
+        top: 35%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 100px;
+      }
       #stripes13 {
       background-image: repeating-linear-gradient(165deg, #ccc, #ccc 60px, #dbdbdb 60px, #dbdbdb 120px);
       }
       </style>
       
-      <div id="stripes13" class="pattern">
+      <div  class="pattern">
         <img
-        src="{{url_for('static', filename='logo.png')}}"
-        width="200"
-        height="=200"
-      />
+        src="{{url_for('static', filename='header.jpg')}}"
+        width="100%"
+        />
+      <div class="centered">Data Dash</div>
       </div>
   </header>  
   
   <section>
-    
-    <nav>
-      <ul>
+
+  <article>
+    <div class="dropdown">
+      <button class="btn btn-info dropdown-toggle" id="btn1" type="button" data-toggle="dropdown">Navigate
+      <span class="caret"></span></button>
+      <ul class="dropdown-menu">
         <li><a href="#data">Data</a></li>
         <li><a href="#summary">Summary</a></li>
-        <li><a href="#visuals">Visualization</a></li>
         <li><a href="#curve">Curving</a></li>
+  
       </ul>
-    </nav>
-  <article>
+    </div>
+    <br>
     <a id="data">
-    <h1 style="color: green">Your Data:</h1>
+    <h1 style="color: rgb(0, 92, 128)">Your Data:</h1>
   </a>
     {{ data | safe }}
     <nav>
         <a href="#top">Back To Top</a>
     </nav>
     <a id="summary">
-    <h1 style="color: green">Summary:</h1>
+    <h1 style="color: rgb(0, 92, 128)">Summary:</h1>
   </a> 
 
   
   {{ summary_data | safe }}
-  <h3>Understanding the Stats:</h3>
- 
-  <p><b>Count:</b> You submitted {{count | safe}} student test scores.</p>
-  <p>
-    <b>Mean:</b> The average test score was {{mean | safe}}. It is
-    calculated by adding all the scores together and dividing by the count. The
-    mean is a good overall representation of the middle value scored by your
-    class.
-  </p>
-  <p>
-    <b>Standard Deviation:</b> Your standard deviation was {{std |
-    safe}}. Standard deviation tells you how spread out the data is, it is a
-    measure of how far each observed value is from the average. The larger the
-    standard deviation, the more spread out your data is. For your quiz, 95% of
-    your students scored between {{ lower }} and {{ mean + std}}.
-  </p>
-  <p>
-    <b>Min:</b> The minimun score was {{min |
-    safe}}.
-  </p>
-  <p>
-    <b>25th Percentile:</b> The 25th percentile for the quiz was {{ q1 | safe}}.
-    In other words, this is the first quartile. This means that a quarter of the
-    test scores were below this score. On the other hand, three-quarters of the
-    test scores were above this value.
-  </p>
-  <p>
-    <b>50th Percentile:</b> The 50th percentile for the quiz was {{q2 | safe}}.
-    This is the second quantile. Half of the test scores were
-    below this score and half were above. Similar to the mean, this value is
-    also good for getting a good sense of the middle value of the test score.
-  </p>
-  <p>
-    <b>75th Percentile:</b> The 75th percentile for the quiz was {{q3 | safe}}.
-    This is considered the third quantile. This means that three-quarters of the
-    test scores were above this score. On the other hand, one quarter of the
-    test scores were below this value.
-  </p>
-  <p>
-    <b>Max:</b> The maximum score was {{max |
-    safe}}.
-  </p>
+  <P></P>
+  <p><b>Understanding the Stats:</b></p>
+  <P></P>
+  <p>Have any question regarding these statistics? Explore below!</p>
+  <div class="dropdown">
+    <button class="btn btn-info dropdown-toggle" id="btn1" type="button" data-toggle="dropdown">Questions
+    <span class="caret"></span></button>
+    <ul class="dropdown-menu">
+      <li id="option1"><a>How can I interpret the mean?</a></li>
+      <li id="option2"><a>What is standard deviation? (std)</a></li>
+      <li id="option3"><a>How can I interpret 25th, 50th, 75th percentile?</a></li>
+      <li id="option4"><a>How should I visualize the results?</a></li>
+      <li id="option5"><a>Which students did well?</a></li>
+      <li id="option6"><a>Which students need help?</a></li>
+      <li id="option7"><a>Should I curve my test scores?</a></li>
+
+    </ul>
+  </div>
+  <P></P>
+  <p id="answer"></p>
+
   <p></p>
   <a id="visuals">
-    <nav>
-      <a href="#top">Back To Top</a>
-  </nav>
-  <h1 style="color: green">Visualization Options:</h1>
+    
+  <h1 style="color: rgb(0, 92, 128)">Visualization Options:</h1>
 </a>
   <p>Click on the different viualization options to summarize your test results:</p>
+  <div class="dropdown">
+    <button class="btn btn-info dropdown-toggle" id="btn1" type="button" data-toggle="dropdown">Options
+    <span class="caret"></span></button>
+    <ul class="dropdown-menu">
+      <li><a href="{{ url_for('boxplot') }}">Boxplot</a></li>
+      <li><a href="{{ url_for('histogram') }}">Histogram</a></li>
+      <li><a href="{{ url_for('frequency') }}">Bar Graph</a></li>
 
-  <p><a href="{{ url_for('boxplot') }}">Boxplot</a></p>
-  <p><a href="{{ url_for('histogram') }}">Histogram</a></p>
-  <p><a href="{{ url_for('frequency') }}">Bar Graph</a></p>
+    </ul>
+  </div>
+  <P></P>
   <a id="curve">
-  <h1 style="color: green">Curving Options:</h1>
+  <h1 style="color: rgb(0, 92, 128)">Curving Options:</h1>
   </a>
   <p>Click on the different curving option to curve your scores:</p>
-  <p><a href="{{ url_for('flatscale') }}">Flat Scale</a></p>
-  <p><a href="{{ url_for('linearscale') }}">Linear Scale</a></p>
-  <p><a href="{{ url_for('rootscale') }}">Root Scale</a></p>
-  <p></p>
-  <p></p>
+  <div class="dropdown">
+    <button class="btn btn-info dropdown-toggle" id="btn1" type="button" data-toggle="dropdown">Options
+    <span class="caret"></span></button>
+    <ul class="dropdown-menu">
+      <li><a href="{{ url_for('flatscale') }}">Flat Scale</a></li>
+      <li><a href="{{ url_for('linearscale') }}">Linear Scale</a></li>
+      <li><a href="{{ url_for('rootscale') }}">Root Scale</a></li>
+
+    </ul>
+  </div>
+
+  <br>
+  <br>
+
   <p></p>
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>

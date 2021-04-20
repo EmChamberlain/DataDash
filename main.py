@@ -7,6 +7,8 @@ from os.path import join, dirname, realpath
 import matplotlib.pyplot as plt
 import math
 import pathlib
+from flask import Response
+from flask import send_file
 
 uploadPath = os.path.join(os.getcwd(), '\\FileStorage')
 cookieMaxAge = 60*60*24*7
@@ -59,6 +61,9 @@ def saveNewFile(fileStorageIn):
 
     fileStorageIn.save(os.path.join(uploadPath, newName, 'data.csv'))
     return newName
+
+
+csv = '1,2,3\n4,5,8\n'
 
 
 @app.route('/data', methods=['GET', 'POST'])
@@ -179,6 +184,7 @@ def flatscale():
     Max = ss_dict['Score']['max']
 
     df["Score"] += (100-Max)
+
     summary_stats = df.describe()
     ss_dict = summary_stats.to_dict()
 
@@ -197,7 +203,27 @@ def flatscale():
     plt.xlabel("Score")
     plt.ylabel("Frequency")
     plt.savefig(os.path.join(uploadPath, cookieName, "histogramfs.png"))
+    print(csv)
     return render_template('flatscale.html', data=df.to_html(), summary_data=summary_stats.to_html())
+
+
+@app.route("/flatscaledownload")
+def downloadFlatScale():
+    # print(csv)
+    # with open("outputs/Adjacency.csv") as fp:
+    #     csv = fp.read()
+    cookieName = request.cookies.get(cookieID)
+    df = pd.read_csv(os.path.join(uploadPath, cookieName, 'data.csv'))
+    df = pd.read_csv(os.path.join(uploadPath, cookieName, 'data.csv'))
+    summary_stats = df.describe()
+    ss_dict = summary_stats.to_dict()
+    Max = ss_dict['Score']['max']
+
+    df["Score"] += (100-Max)
+    resp = make_response(df.to_csv())
+    resp.headers["Content-Disposition"] = "attachment; filename=flatscale.csv"
+    resp.headers["Content-Type"] = "text/csv"
+    return resp
 
 
 @app.route('/linearscale', methods=['GET', 'POST'])
@@ -226,7 +252,7 @@ def linearscale():
     a = ((Max + 2) - (Min + 8)) / (Max - Min)
     for index, row in df_copy.iterrows():
         df_copy.at[index, "Score"] = 85 + a*(row["Score"] - Mean)
-
+    summary_stats = df_copy.describe()
     plt.figure()
     box = df.boxplot(column=["Score"])
     plt.savefig(os.path.join(uploadPath, cookieName, "boxplotls.png"))
@@ -244,6 +270,33 @@ def linearscale():
     plt.savefig(os.path.join(uploadPath, cookieName, "histogramls.png"))
 
     return render_template('linearscale.html', data=df_copy.to_html(), summary_data=summary_stats.to_html())
+
+
+@app.route("/linearscaledownload")
+def downloadLinearScale():
+    # print(csv)
+    # with open("outputs/Adjacency.csv") as fp:
+    #     csv = fp.read()
+    cookieName = request.cookies.get(cookieID)
+    df = pd.read_csv(os.path.join(uploadPath, cookieName, 'data.csv'))
+    summary_stats = df.describe()
+    ss_dict = summary_stats.to_dict()
+    df_copy = df
+
+    Min = ss_dict['Score']['min']
+    Max = ss_dict['Score']['max']
+    Mean = ss_dict['Score']['mean']
+
+    summary_stats = df_copy.describe()
+    ss_dict = summary_stats.to_dict()
+    a = ((Max + 2) - (Min + 8)) / (Max - Min)
+    for index, row in df_copy.iterrows():
+        df_copy.at[index, "Score"] = 85 + a*(row["Score"] - Mean)
+
+    resp = make_response(df.to_csv())
+    resp.headers["Content-Disposition"] = "attachment; filename=linearscale.csv"
+    resp.headers["Content-Type"] = "text/csv"
+    return resp
 
 
 @app.route('/rootscale', methods=['GET', 'POST'])
@@ -265,6 +318,7 @@ def rootscale():
     ss_dict = summary_stats.to_dict()
     for index, row in df_copy.iterrows():
         df_copy.at[index, "Score"] = 10 * math.sqrt(row["Score"])
+    summary_stats = df_copy.describe()
 
     plt.figure()
     box = df.boxplot(column=["Score"])
@@ -282,6 +336,26 @@ def rootscale():
     df.hist(bins=10)
     plt.savefig(os.path.join(uploadPath, cookieName, "histogramrs.png"))
     return render_template('rootscale.html', data=df_copy.to_html(), summary_data=summary_stats.to_html())
+
+
+@app.route("/rootscaledownload")
+def downloadRootScale():
+    # print(csv)
+    # with open("outputs/Adjacency.csv") as fp:
+    #     csv = fp.read()
+    cookieName = request.cookies.get(cookieID)
+    df = pd.read_csv(os.path.join(uploadPath, cookieName, 'data.csv'))
+    df_copy = df
+
+    summary_stats = df_copy.describe()
+    ss_dict = summary_stats.to_dict()
+    for index, row in df_copy.iterrows():
+        df_copy.at[index, "Score"] = 10 * math.sqrt(row["Score"])
+
+    resp = make_response(df.to_csv())
+    resp.headers["Content-Disposition"] = "attachment; filename=rootscale.csv"
+    resp.headers["Content-Type"] = "text/csv"
+    return resp
 
 
 @app.after_request
